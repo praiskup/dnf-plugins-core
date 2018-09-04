@@ -88,6 +88,9 @@ class DebuginfoInstallCommand(dnf.cli.Command):
             for pkg in package_query:
                 self._di_install(pkg)
 
+        if not self.dbgdone:
+            logger.info(_("No debuginfo packages available to install"))
+
         if errors_spec and self.base.conf.strict:
             raise dnf.exceptions.PackagesNotAvailableError(_("Unable to find a match"),
                                                            pkg_spec=' '.join(errors_spec))
@@ -124,3 +127,5 @@ class DebuginfoInstallCommand(dnf.cli.Command):
                 continue
             self.dbgdone.append(dbgname)
             break
+        else:
+            logger.info(_("Could not find debuginfo for pkg: %s") % package)
